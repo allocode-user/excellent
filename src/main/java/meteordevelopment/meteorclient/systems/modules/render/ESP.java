@@ -88,6 +88,13 @@ public class ESP extends Module {
         .build()
     );
 
+    private final Setting<Boolean> showInvisible = sgGeneral.add(new BoolSetting.Builder()
+        .name("show-invisible")
+        .description("Renders invisible entities.")
+        .defaultValue(true)
+        .build()
+    );
+
     public final Setting<ShapeMode> shapeMode = sgGeneral.add(new EnumSetting.Builder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
@@ -362,7 +369,7 @@ public class ESP extends Module {
         if (drawAsTarget(entity)) return false;
         if (!entities.get().contains(entity.getType())) return true;
         if (entity == mc.player && ignoreSelf.get()) return true;
-        if (entity == mc.getCameraEntity() && mc.options.getCameraType().isFirstPerson()) return true;
+        if (!showInvisible.get() && entity.isInvisible()) return true;
         return !EntityUtils.isInRenderDistance(entity);
     }
 
