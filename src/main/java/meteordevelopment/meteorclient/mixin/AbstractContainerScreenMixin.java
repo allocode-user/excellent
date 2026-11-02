@@ -8,6 +8,7 @@ package meteordevelopment.meteorclient.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.misc.InventoryTweaks;
+import meteordevelopment.meteorclient.systems.modules.movement.GUIMove;
 import meteordevelopment.meteorclient.systems.modules.render.BetterTooltips;
 import meteordevelopment.meteorclient.systems.modules.render.ItemHighlight;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -135,5 +136,23 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         return original;
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void onMouseClicked(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
+        GUIMove guiMove = Modules.get().get(GUIMove.class);
+
+        if (!guiMove.isActive() || !guiMove.stopOnClick.get() || guiMove.skip()) return;
+
+        if (event.button() < 0 || event.button() > 3) return;
+
+        if (mc.player == null) return;
+
+        double x = mc.player.getDeltaMovement().x;
+        double z = mc.player.getDeltaMovement().z;
+
+        if (x * x + z * z > 0.0001) {
+            cir.setReturnValue(true);
+        }
     }
 }

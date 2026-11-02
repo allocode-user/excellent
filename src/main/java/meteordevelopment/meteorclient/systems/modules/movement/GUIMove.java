@@ -4,6 +4,8 @@
  */
 
 package meteordevelopment.meteorclient.systems.modules.movement;
+import meteordevelopment.meteorclient.events.packets.PacketEvent;
+import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 
 import meteordevelopment.meteorclient.events.meteor.KeyInputEvent;
 import meteordevelopment.meteorclient.events.meteor.MouseClickEvent;
@@ -42,6 +44,13 @@ public class GUIMove extends Module {
         .name("guis")
         .description("Which GUIs to move in.")
         .defaultValue(Screens.Inventory)
+        .build()
+    );
+
+    public final Setting<Boolean> stopOnClick = sgGeneral.add(new BoolSetting.Builder()
+        .name("legit")
+        .description("You can't click on inventory slots while you run.")
+        .defaultValue(false)
         .build()
     );
 
